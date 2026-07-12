@@ -77,7 +77,6 @@ Un cliente (por ejemplo `daniel.estudio.alura.2026@gmail.com`) envía un correo 
 ```
 flexdata-agente-pedidos-n8n/
 ├── README.md                          # Este archivo
-├── LICENSE
 ├── .gitignore
 ├── .env.example                       # Plantilla de variables/credenciales necesarias
 ├── docs/
@@ -132,6 +131,3 @@ Ver carpeta [`docs/capturas`](docs/capturas) para el detalle visual de cada nodo
 - [ ] Notificaciones internas a Slack/Teams cuando se registra un nuevo pedido.
 - [ ] Manejo de adjuntos (`hasAttachments`).
 
-## 📄 Licencia
-
-Este proyecto se distribuye bajo la licencia MIT. Ver [LICENSE](LICENSE).
