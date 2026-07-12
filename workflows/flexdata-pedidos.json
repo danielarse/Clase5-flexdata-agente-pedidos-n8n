@@ -1,0 +1,246 @@
+{
+  "name": "Clase5",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kUOnUcr9FWZ4dIjJUeX7CzpIxzdJvhu2Y4c9WruPuFc",
+          "mode": "list",
+          "cachedResultName": "Planilla de Pedidos de FlexData",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kUOnUcr9FWZ4dIjJUeX7CzpIxzdJvhu2Y4c9WruPuFc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Pedidos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kUOnUcr9FWZ4dIjJUeX7CzpIxzdJvhu2Y4c9WruPuFc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha": "={{ $now.format('dd-MM-yyyy') }}",
+            "Canal": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Canal', `Describe si el mensaje viene de Gmail o Outlook o LinkedIn o Instagram o Whatsapp, etc`, 'string') }}",
+            "Cliente": "={{ $json.from }}",
+            "Asunto": "={{ $json.subject }}",
+            "Mensaje": "={{ $json.bodyPreview }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Canal",
+              "displayName": "Canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cliente",
+              "displayName": "Cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Asunto",
+              "displayName": "Asunto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensaje",
+              "displayName": "Mensaje",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        432,
+        208
+      ],
+      "id": "b892ad5b-59c8-424e-9f5e-e32f4f6b3654",
+      "name": "Pedidos",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "k9XJPMfjg5g5xGw9",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "6290bad5-b1fe-4cc9-b5b2-39ad90cbaa4e",
+      "name": "Recepción de Correo Corporativo",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "slke75qSSKoY4boZ",
+          "name": "daniel.estudio.alura.2026@outlook.com account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=##Rol\nEres Pablo. Agente de ventas orientado a la atención al cliente para la empresa FlexData. Tu meta es completar la planilla y responde al cliente con un tono amable, amigable y siempre guiándolo con su consulta y motivándolo a finalizar el pedido en caso de que haya solicitado algo. \n\n##Tools\n-Utiliza la herramienta ‘Pedidos’ y completa la plantilla con los datos correspondientes.\n\nFecha: {{ $now.format('dd-MM-yyyy') }}\nCliente: {{ $json.from }}\nAsunto: {{ $json.subject }}\nMensaje: {{ $json.bodyPreview }}\n\n##Respuesta\n-Debes responder en formato HTML usando negritas, colores, emojis de manera estructurada para que se vea agradable visualmente.\n-Si usas colores en los títulos, utiliza teoría del color para agradar visualmente al cliente.\n-Al inicio del mensaje preséntate con tu nombre y la empresa de la que eres parte.\n\n\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "903bc61e-8790-42f5-9f2c-7dca48d2d633",
+      "name": "Análisis y Extracción Inteligente de Solicitudes"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatCohere",
+      "typeVersion": 1,
+      "position": [
+        240,
+        224
+      ],
+      "id": "9d11b8bc-2a9e-42b9-903f-1c492c76d705",
+      "name": "Motor de Comprensión de Solicitudes",
+      "credentials": {
+        "cohereApi": {
+          "id": "4MTdiQanWpgvEuRm",
+          "name": "Cohere account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "={{ $('Recepción de Correo Corporativo').item.json.from }}",
+        "subject": "={{ $('Recepción de Correo Corporativo').item.json.subject }}",
+        "bodyContent": "={{ $json.output }}",
+        "additionalFields": {
+          "bodyContentType": "html"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "682f9e5c-8352-484d-8fdd-68582a11ea2a",
+      "name": "Respuesta Automática al Cliente",
+      "webhookId": "f8588025-9e1a-4a93-8afc-ae49199354b4",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "slke75qSSKoY4boZ",
+          "name": "daniel.estudio.alura.2026@outlook.com account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Pedidos": {
+      "ai_tool": [
+        [
+          {
+            "node": "Análisis y Extracción Inteligente de Solicitudes",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recepción de Correo Corporativo": {
+      "main": [
+        [
+          {
+            "node": "Análisis y Extracción Inteligente de Solicitudes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Análisis y Extracción Inteligente de Solicitudes": {
+      "main": [
+        [
+          {
+            "node": "Respuesta Automática al Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Motor de Comprensión de Solicitudes": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Análisis y Extracción Inteligente de Solicitudes",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "63d337ef-f728-412c-a9c4-7fbe610c6292",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3372fe2ccde0d00d00ff981e9e399a4964e3d4b21b57c6da56a228c44f152cc5"
+  },
+  "nodeGroups": [],
+  "id": "xi8vymDAk2XmcoLM",
+  "tags": []
+}

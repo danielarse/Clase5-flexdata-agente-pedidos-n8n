@@ -1,0 +1,19 @@
+# Credenciales y variables de entorno
+.env
+*.env
+credentials.json
+
+# Exports de n8n con datos sensibles/credenciales embebidas
+*.credentials.json
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+
+# Node (si se agregan scripts auxiliares)
+node_modules/
+npm-debug.log
